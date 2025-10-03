@@ -2,9 +2,20 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator,  FileExtensionValidator
 
 class FileType(models.IntegerChoices):
-    IMG   = 0, "image"
-    PDF   = 1, "pdf"
- 
+    # name, value, label で各要素にアクセス可能
+    JPG   = 1, "jpg"
+    PNG   = 2, "png"
+    BMP   = 3, "bmp"
+    TIF   = 4, "tif" 
+    PDF   = 5, "pdf"
+    # label → valueは　cls(label).value　で変換できるが
+    # その逆は関数を作成する必要がある
+    @classmethod
+    def label_to_value(cls, ext_label):
+        for ext in cls:
+            if ext.label == ext_label:
+                return ext.value
+    
 class Direction(models.IntegerChoices):
     HORIZONTAL = 0, "横書き"
     VERTICAL   = 1, "縦書き"
@@ -21,13 +32,12 @@ class Document(models.Model):
     created = models.DateTimeField(auto_now_add=True) 
     state = models.PositiveSmallIntegerField(choices=State.choices, default=State.QUEUED)  
     file = models.FileField(upload_to="input/",
-        validators=[FileExtensionValidator(allowed_extensions=["pdf","jpg","jpeg","png"])],
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "png", "bmp", "tif", "pdf"])],
     )
     # FileField / ImageField は自動で日付ごとのサブディレクトリを作成する
     file_name = models.CharField(max_length=255)  
     file_type = models.PositiveSmallIntegerField(choices=FileType.choices)
     total_pages = models.PositiveSmallIntegerField(default=1)  
-      
     class Meta:
         ordering = ['created']
 
