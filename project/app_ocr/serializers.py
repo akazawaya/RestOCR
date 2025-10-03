@@ -14,10 +14,11 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
     file_type_display = serializers.CharField(source="get_file_type_display", read_only=True)
     class Meta:
         model = Document
-        fields = ['id', 'state', 'state_display', 'created', 'file', 'file_name', 'file_type', 'file_type_display', 'total_pages']
+        fields = ['state', 'state_display', 'created', 'file', 'file_name', 'file_type', 'file_type_display', 'total_pages']
 
 class PageSerializer(serializers.HyperlinkedModelSerializer):
     state_display = serializers.CharField(source="get_state_display", read_only=True)
+    doc = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all())
     class Meta:
         model = Page
         fields = ['doc', 'image', 'state', 'state_display', 'page_number', 'width_px', 'height_px']
