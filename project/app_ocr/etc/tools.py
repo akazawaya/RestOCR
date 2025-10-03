@@ -32,17 +32,13 @@ def validate_and_analyze(file):
     image_byte_list = pillow_to_bytes(image_list, format="png")
     return image_byte_list, ext, total_pages
 
-
-def analyze_pdf(pdf):
+def analyze_pdf(pdf, dpi=300):
+    scale = dpi / 72 
     images = []
     pdf = pypdfium2.PdfDocument(pdf)
     for page in pdf:
-        image = page.render(
-            scale=1,rotation=0,
-            crop=(0, 0, 0, 0),
-            ).to_pil()
-        images.append(image)
-    return images, int(len(images))
+        images.append(page.render(scale=scale, rotation=0).to_pil())
+    return images, len(images)
 
 def analyze_tiff(tif):
     images = []
