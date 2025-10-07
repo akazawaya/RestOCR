@@ -18,13 +18,14 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
 
 class PageSerializer(serializers.HyperlinkedModelSerializer):
     state_display = serializers.CharField(source="get_state_display", read_only=True)
-    doc = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all())
+    doc = serializers.PrimaryKeyRelatedField(queryset=Document.objects.all()) #これがないとID の保存時にURL形式を求めてくる
     class Meta:
         model = Page
         fields = ['doc', 'image', 'state', 'state_display', 'page_number', 'width_px', 'height_px']
 
 class ContentSerializer(serializers.HyperlinkedModelSerializer):
     direction_display = serializers.CharField(source="get_direction_display", read_only=True)
+    page = serializers.PrimaryKeyRelatedField(queryset=Page.objects.all())
     class Meta:
         model = Content
         fields = ['page', 'bbox', 'content', 'direction', 'direction_display', 'rec_score', 'det_score']
