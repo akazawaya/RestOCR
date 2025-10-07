@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator,  FileExtensionValidator
+import uuid
 
 class FileType(models.IntegerChoices):
     # name, value, label で各要素にアクセス可能
@@ -43,7 +44,7 @@ class Document(models.Model):
 
 class Page(models.Model):
     doc = models.ForeignKey(Document, on_delete=models.CASCADE, related_name="page")
-    image = models.ImageField(upload_to="input/img/", null=True, blank=True,
+    image = models.ImageField(upload_to=f"input/{uuid.uuid4()}", null=True, blank=True,
                               width_field="width_px", height_field="height_px") # 自動でwhを取得できるらしい
     state = models.PositiveSmallIntegerField(choices=State.choices, default=State.QUEUED)
     page_number = models.PositiveSmallIntegerField(default=1)
