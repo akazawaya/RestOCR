@@ -1,10 +1,10 @@
 from django.contrib.auth.models import User
-from app_ocr.models import FileType, Direction, Document, Page, Content
+from app_ocr.models import FileType, Direction, Document, Page, Word
 
 from rest_framework.response import Response
 
 from django.core.files.base import ContentFile
-from app_ocr.serializers import UserSerializer, DocumentSerializer, PageSerializer, ContentSerializer
+from app_ocr.serializers import UserSerializer, DocumentSerializer, PageSerializer, WordSerializer
 
 #from app_ocr.permissions import IsOwnerOrReadOnly
 from rest_framework.decorators import action
@@ -45,11 +45,11 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         # 全体のdirはPath(page.instance.image.name).parent.as_posix()でアクセス可能
                         page_paths = page.instance.image.name
                         # breakpoint() 
-                        content_ = test_ocr(page_paths)
-                        for w in content_:
-                            ct = ContentSerializer(data={"page":page.instance.pk, "bbox":w["points"], "content":w["content"], "direction":Direction.label_to_value(w["direction"]), "rec_score":w["rec_score"], "det_score":w["det_score"]})
-                            if ct.is_valid(raise_exception=True):
-                                ct.save()
+                        words = test_ocr(page_paths)
+                        for w in words:
+                            word = WordSerializer(data={"page":page.instance.pk, "bbox":w["points"], "content":w["content"], "direction":Direction.label_to_value(w["direction"]), "rec_score":w["rec_score"], "det_score":w["det_score"]})
+                            if word.is_valid(raise_exception=True):
+                                word.save()
             return Response({"document": doc.data}, status=status.HTTP_201_CREATED)
                         
         
@@ -57,6 +57,6 @@ class PageViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
 
-class ContentViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Content.objects.all()
-    serializer_class = ContentSerializer
+class WordViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Word.objects.all()
+    serializer_class = WordSerializer

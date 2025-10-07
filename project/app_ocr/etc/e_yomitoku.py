@@ -8,7 +8,7 @@ def init_engine():
 
 # 1ページずつ処理する方針
 def test_ocr(img_path):
-    contents = []
+    words = []
     ocr = init_engine()
     arr_bgr = cv2.imread(str(img_path), cv2.IMREAD_COLOR)
     if arr_bgr is None:
@@ -24,8 +24,8 @@ def test_ocr(img_path):
             "det_score": w.det_score,
             "rec_score": w.rec_score,
         }
-        contents.append(content)
-    return contents
+        words.append(content)
+    return words
 
 
 

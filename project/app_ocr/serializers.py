@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from app_ocr.models import Document, Page, Content
+from app_ocr.models import Document, Page, Word
 from django.contrib.auth.models import User
 
 # http -f POST http://localhost:8000/documents/ file@"/mnt/..." file_name=test file_type=0
@@ -23,9 +23,9 @@ class PageSerializer(serializers.HyperlinkedModelSerializer):
         model = Page
         fields = ['doc', 'image', 'state', 'state_display', 'page_number', 'width_px', 'height_px']
 
-class ContentSerializer(serializers.HyperlinkedModelSerializer):
+class WordSerializer(serializers.HyperlinkedModelSerializer):
     direction_display = serializers.CharField(source="get_direction_display", read_only=True)
     page = serializers.PrimaryKeyRelatedField(queryset=Page.objects.all())
     class Meta:
-        model = Content
+        model = Word
         fields = ['page', 'bbox', 'content', 'direction', 'direction_display', 'rec_score', 'det_score']
