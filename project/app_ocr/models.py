@@ -1,5 +1,5 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator,  FileExtensionValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 import uuid
 
 class FileType(models.IntegerChoices):
@@ -52,7 +52,7 @@ class Document(models.Model):
         ordering = ['created']
 
 class Page(models.Model):
-    doc = models.ForeignKey(Document, on_delete=models.CASCADE, related_name="page")
+    doc = models.ForeignKey(Document, on_delete=models.CASCADE, related_name="pages")
     image = models.ImageField(upload_to=f"input/{uuid.uuid4()}", null=True, blank=True,
                               width_field="width_px", height_field="height_px") # 自動でwhを取得できるらしい
     state = models.PositiveSmallIntegerField(choices=State.choices, default=State.QUEUED)
@@ -60,8 +60,8 @@ class Page(models.Model):
     width_px = models.PositiveIntegerField(null=True, blank=True)
     height_px = models.PositiveIntegerField(null=True, blank=True) 
 
-class Content(models.Model):
-    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="content")
+class Word(models.Model):
+    page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="words")
     bbox = models.JSONField(blank=True, null=True)
     content = models.TextField(blank=True, null=True) 
     direction = models.PositiveSmallIntegerField(choices=Direction.choices)

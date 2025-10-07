@@ -18,7 +18,7 @@ router = DefaultRouter()
 router.register(r'users', views.UserViewSet, basename='user')
 router.register(r'documents', views.DocumentViewSet, basename='document')
 router.register(r'pages', views.PageViewSet, basename='page')
-router.register(r'contents', views.ContentViewSet, basename='content')
+router.register(r'words', views.WordViewSet, basename='word')
 
 # これにより、APIのURLはルーターによって自動的に決定されます。
 urlpatterns = [
