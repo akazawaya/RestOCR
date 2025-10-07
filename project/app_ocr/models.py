@@ -9,8 +9,6 @@ class FileType(models.IntegerChoices):
     BMP   = 3, "bmp"
     TIF   = 4, "tif" 
     PDF   = 5, "pdf"
-    # label → valueは　cls(label).value　で変換できるが
-    # その逆は関数を作成する必要がある
     @classmethod
     def label_to_value(cls, ext_label):
         for ext in cls:
@@ -18,14 +16,25 @@ class FileType(models.IntegerChoices):
                 return ext.value
     
 class Direction(models.IntegerChoices):
-    HORIZONTAL = 0, "横書き"
-    VERTICAL   = 1, "縦書き"
+    HORIZONTAL = 1, "horizontal"
+    VERTICAL   = 2, "vertical"
+    @classmethod
+    def label_to_value(cls, ext_label):
+        for ext in cls:
+            if ext.label == ext_label:
+                return ext.value
     
 class State(models.IntegerChoices):
-    QUEUED     = 0, "待機中"
-    PROCESSING = 1, "処理中"
-    SUCCESS    = 2, "完了"
-    FAILED     = 3, "失敗"
+    QUEUED     = 1, "待機中"
+    PROCESSING = 2, "処理中"
+    SUCCESS    = 3, "完了"
+    FAILED     = 4, "失敗"
+    @classmethod
+    def label_to_value(cls, ext_label):
+        for ext in cls:
+            if ext.label == ext_label:
+                return ext.value
+
 
 # Userモデルはdjango.contrib.auth.models
 # から自動で作成される
